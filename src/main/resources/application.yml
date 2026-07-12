@@ -124,6 +124,11 @@ logging:
 
 # Configuración de aplicación
 app:
+  # Gateway
+  gateway:
+    require-auth: true
+    routes: []   # ej: [{ id: orders, path-prefix: /orders, target-uri: http://orders:8081 }]
+
   # Habilitar/deshabilitar caché con Redis
   # Valores: true (habilita caché) / false (deshabilita caché)
   cache:
@@ -183,4 +188,9 @@ resilience4j:
         # Tiempo máximo que un hilo espera para obtener un permiso antes de recibir 429
         timeout-duration: 0s
         # Registrar métricas en Actuator
+        register-health-indicator: true
+      gateway:
+        limit-for-period: 200
+        limit-refresh-period: 1s
+        timeout-duration: 0s
         register-health-indicator: true

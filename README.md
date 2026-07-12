@@ -44,9 +44,22 @@ Java 21 · Spring Cloud Gateway · Redis · Resilience4j · Docker · Gradle · 
 
 Organizado por **feature** en capas `domain -> application -> infrastructure`, con la regla de dependencia verificada por ArchUnit. La logica de negocio (dominio y casos de uso) no depende de framework ni de infraestructura; los adaptadores (web, persistencia, mensajeria) implementan puertos definidos por la aplicacion.
 
+## API
+
+Contexto `/api-gateway`. Todo lo que llega bajo `/gateway/**` se reenvia al downstream segun las rutas de `app.gateway.routes` (prefijo → target). `GET /api/v1/routes` lista las rutas. Aplica auth (cabecera Authorization), rate limiting y propagacion de `X-Correlation-Id`.
+
+Ejemplo de config:
+```yaml
+app:
+  gateway:
+    require-auth: true
+    routes:
+      - { id: orders, path-prefix: /orders, target-uri: http://orders:8081 }
+```
+
 ## Estado
 
-🚧 En planificacion / arranque. El diseno detallado (epicas, historias y criterios de aceptacion) vive en el plan del portafolio.
+✅ Nucleo funcional implementado: single entry point (`/gateway/**`), resolucion de rutas por prefijo mas largo, **reenvio al downstream con RestClient**, verificacion de auth, rate limiting (Resilience4j) y propagacion de correlation id. Tests (unit + integracion con WireMock como downstream real). Capa siguiente: descubrimiento de servicios, circuit breaker por ruta y strip de prefijo configurable.
 
 ---
 

@@ -4,6 +4,8 @@ import com.ar.laboratory.apigateway.example.domain.exception.ExampleAlreadyExist
 import com.ar.laboratory.apigateway.example.domain.exception.ExampleNotFoundException;
 import com.ar.laboratory.apigateway.shared.infrastructure.exception.BadRequestException;
 import com.ar.laboratory.apigateway.shared.infrastructure.exception.InfrastructureException;
+import com.ar.laboratory.apigateway.gateway.domain.exception.RouteNotFoundException;
+import com.ar.laboratory.apigateway.gateway.domain.exception.UnauthorizedException;
 import com.ar.laboratory.apigateway.shared.infrastructure.logging.MdcFilter;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import java.time.LocalDateTime;
@@ -80,6 +82,18 @@ public class GlobalExceptionHandler {
                         .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(RouteNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRouteNotFound(
+            RouteNotFoundException ex, WebRequest request) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException ex, WebRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -168,6 +182,20 @@ public class GlobalExceptionHandler {
                         .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    private ResponseEntity<ErrorResponse> build(
+            HttpStatus status, String message, WebRequest request) {
+        return ResponseEntity.status(status)
+                .body(
+                        ErrorResponse.builder()
+                                .timestamp(LocalDateTime.now())
+                                .status(status.value())
+                                .error(status.getReasonPhrase())
+                                .message(message)
+                                .path(getPath(request))
+                                .traceId(generateTraceId())
+                                .build());
     }
 
     private String getPath(WebRequest request) {
