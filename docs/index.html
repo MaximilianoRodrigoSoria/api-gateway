@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Gateway · Maximiliano Rodrigo Soria</title>
+<meta name="description" content="API Gateway en Java 21 y Spring — punto único de entrada con rate limiting, auth centralizada, resiliencia y arquitectura hexagonal.">
+<meta property="og:title" content="API Gateway">
+<meta property="og:description" content="Punto único de entrada para microservicios: rate limiting, auth, routing y resiliencia. Java 21 · Spring · Hexagonal.">
+<meta property="og:image" content="img/social-preview.png">
+<style>
+  :root{ --bg:#0F1B22; --panel:#152430; --line:#1F3440; --accent:#06C69C; --accent2:#02ECB6; --label:#1A1C1F; --txt:#D6E4E2; --muted:#8FA6A3; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 10px;text-align:center}
+  header img.banner{width:100%;max-width:900px;border-radius:12px;border:1px solid var(--line)}
+  h1{font-size:2.4rem;margin:24px 0 6px;letter-spacing:-.5px}
+  .tag{color:var(--muted);font-size:1.05rem;max-width:680px;margin:0 auto}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px 0}
+  .chip{background:var(--label);color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:.82rem;font-weight:600}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:26px 0 10px}
+  .btn{background:var(--accent);color:#04231C;font-weight:700;padding:11px 22px;border-radius:8px;display:inline-block}
+  .btn.alt{background:transparent;color:var(--accent2);border:1px solid var(--accent)}
+  section{margin:46px 0}
+  h2{font-size:1.4rem;color:var(--accent2);margin-bottom:18px;border-left:3px solid var(--accent);padding-left:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;transition:border-color .15s,transform .15s}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card h3{font-size:1.05rem;margin-bottom:6px;color:var(--txt)}
+  .card p{font-size:.9rem;color:var(--muted)}
+  .feat{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .feat div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.92rem}
+  .feat b{color:var(--accent)}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:28px 0;text-align:center;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="https://github.com/MaximilianoRodrigoSoria/api-gateway"><img class="banner" src="img/banner.gif" alt="API Gateway"></a>
+    <h1>API Gateway</h1>
+    <p class="tag">Único punto de entrada por delante de un conjunto de microservicios independientes: resuelve rate limiting, autenticación y enrutamiento una sola vez. Cada servicio es autónomo y dueño de su base de datos.</p>
+    <div class="chips">
+      <span class="chip">Java 21</span><span class="chip">Spring</span><span class="chip">Resilience4j</span>
+      <span class="chip">Redis</span><span class="chip">Flyway</span><span class="chip">Docker</span>
+      <span class="chip">Testcontainers</span><span class="chip">Prometheus + Grafana</span><span class="chip">Hexagonal</span>
+    </div>
+    <div class="btns">
+      <a class="btn" href="https://github.com/MaximilianoRodrigoSoria/api-gateway">Ver en GitHub</a>
+      <a class="btn alt" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/blob/main/README.md">Documentación</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Qué resuelve</h2>
+    <div class="feat">
+      <div><b>Single entry point.</b> Los servicios internos no se exponen; todo entra por <code>/gateway/**</code>.</div>
+      <div><b>Rate limiting</b> distribuido por cliente / API key con Resilience4j y Redis.</div>
+      <div><b>Auth centralizada.</b> Verificación de autenticación una sola vez en el borde.</div>
+      <div><b>Routing</b> por prefijo más largo hacia cada microservicio (RestClient).</div>
+      <div><b>Resiliencia:</b> timeouts, retry y circuit breaker por ruta.</div>
+      <div><b>Trazabilidad</b> end-to-end propagando <code>X-Correlation-Id</code>.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Explorar el repositorio</h2>
+    <div class="grid">
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/tree/main/src"><h3>src/</h3><p>Código fuente: dominio, casos de uso y adaptadores (hexagonal por feature).</p></a>
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/tree/main/k8s"><h3>k8s/</h3><p>Manifiestos de Kubernetes: deployment, service, ingress, HPA, secrets.</p></a>
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/tree/main/config"><h3>config/</h3><p>Checkstyle, PMD, SpotBugs y provisioning de Prometheus / Grafana.</p></a>
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/blob/main/docker-compose.yml"><h3>docker-compose.yml</h3><p>Entorno local: gateway + Redis + observabilidad.</p></a>
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/blob/main/build.gradle"><h3>build.gradle</h3><p>Build de Gradle con los quality gates y el catálogo de versiones.</p></a>
+      <a class="card" href="https://github.com/MaximilianoRodrigoSoria/api-gateway/blob/main/CHANGELOG.md"><h3>CHANGELOG.md</h3><p>Historial de cambios (Keep a Changelog + SemVer).</p></a>
+    </div>
+  </section>
+
+  <footer>
+    <strong>Maximiliano Rodrigo Soria</strong><br>
+    <a href="https://www.linkedin.com/in/soriamaximilianorodrigo/">LinkedIn</a> ·
+    <a href="mailto:maximilianorodrigosoria@gmail.com">maximilianorodrigosoria@gmail.com</a>
+  </footer>
+</div>
+</body>
+</html>
